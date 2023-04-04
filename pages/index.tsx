@@ -22,6 +22,10 @@ const inter = Inter({ subsets: ["latin"] });
 export default function Home({ cocktails, randomCocktail }: any) {
   const router = useRouter();
 
+  useEffect(() => {
+    console.log(randomCocktail);
+  }, []);
+
   return (
     <>
       <main>
@@ -95,16 +99,15 @@ export async function getStaticProps() {
   const cocktailsResponse = await fetch(
     "https://www.thecocktaildb.com/api/json/v1/1/search.php?s"
   );
-  const cocktailRandomResponse = await fetch(
-    "https://www.thecocktaildb.com/api/json/v1/1/random.php"
-  );
-  const cocktailRandomData = await cocktailRandomResponse.json();
   const cocktailsData = await cocktailsResponse.json();
+
+  const cocktailRandom = Math.random() * cocktailsData.drinks.length;
+  const cocktailRandomIndex = cocktailsData.drinks[Math.floor(cocktailRandom)];
 
   return {
     props: {
       cocktails: cocktailsData.drinks,
-      randomCocktail: cocktailRandomData.drinks[0],
+      randomCocktail: cocktailRandomIndex,
     },
   };
 }
